@@ -16,5 +16,3 @@ def change():
     print(round(integer))
     print("Centavos:")
     print(round(fractional * 100))
-
-change()
