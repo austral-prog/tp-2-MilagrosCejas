@@ -1,7 +1,7 @@
 name: Autograding Tests
 'on':
-  - push
-  - repository_dispatch
+- push
+- repository_dispatch
 permissions:
   checks: write
   actions: read
@@ -11,21 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor != 'github-classroom[bot]'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'  # Use latest Python version
-
-      - name: Run Unittest
-        id: run-unittest
-        run: python -m unittest discover -s . -p "*_tests.py"
-
-      - name: Autograding Reporter
-        uses: classroom-resources/autograding-grading-reporter@v1
-        env:
-          RUN-UNITTEST_RESULTS: "${{steps.run-unittest.outputs.result}}"
-        with:
-          runners: "run-unittest"
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Run all python tests
+      id: run-all-python-tests
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        timeout: 10
+        max-score: 1
+        setup-command: ''
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        RUN-ALL-PYTHON-TESTS_RESULTS: "${{steps.run-all-python-tests.outputs.result}}"
+      with:
+        runners: run-all-python-tests
